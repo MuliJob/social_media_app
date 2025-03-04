@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-7xl mx-auto grid grid-cols-2 gap-4">
+    <div class="max-w-7xl mx-auto grid grid-cols-2 gap-4">
         <div class="main-left">
             <div class="p-12 bg-white border border-gray-200 rounded-lg">
                 <h1 class="mb-6 text-2xl">Sign up</h1>
@@ -52,3 +52,78 @@
         </div>
     </div>
 </template>
+
+<script>
+import axios from 'axios'
+
+import { useToastStore } from '@/stores/toast'
+
+export default {
+    setup() {
+        const toastStore = useToastStore()
+
+        return {
+            toastStore
+        }
+    },
+
+    data() {
+        return {
+            form: {
+                email: '',
+                name: '',
+                password1: '',
+                password2: ''
+            },
+            errors: [],
+        }
+    },
+
+    methods: {
+        submitForm() {
+            this.errors = []
+
+            if (this.form.email === '') {
+                this.errors.push('Your e-mail is missing')
+            }
+
+            if (this.form.name === '') {
+                this.errors.push('Your name is missing')
+            }
+
+            if (this.form.password1 === '') {
+                this.errors.push('Your password is missing')
+            }
+
+            if (this.form.password1 !== this.form.password2) {
+                this.errors.push('The password does not match')
+            }
+
+            if (this.errors.length === 0) {
+                axios
+                    .post('/api/signup/', this.form)
+                    .then(response => {
+                        if (response.data.message === 'success') {
+                            this.toastStore.showToast(5000, 'The user is registered. Please activate your account by clicking your email link.', 'bg-emerald-500')
+
+                            this.form.email = ''
+                            this.form.name = ''
+                            this.form.password1 = ''
+                            this.form.password2 = ''
+                        } else {
+                            const data = JSON.parse(response.data.message)
+                            for (const key in data){
+                                this.errors.push(data[key][0].message)
+                            }
+
+                            this.toastStore.showToast(5000, 'Something went wrong. Please try again', 'bg-red-300')
+                        }
+                    })
+                    .catch(error => {
+                        console.log('error', error)
+                    })
+            }
+        }
+    }
+}
+</script>
