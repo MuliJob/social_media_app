@@ -35,10 +35,77 @@
                   </template>
 
                   <div>
-                      <button class="py-4 px-6 bg-purple-600 text-white rounded-lg">Log in</button>
+                      <button class="py-4 px-6 bg-emerald-600 text-white rounded-lg">Log in</button>
                   </div>
               </form>
           </div>
       </div>
   </div>
 </template>
+
+<script>
+import axios from 'axios'
+
+import { useUserStore } from '@/stores/user'
+
+export default {
+    setup() {
+        const userStore = useUserStore()
+
+        return {
+            userStore
+        }
+    },
+
+    data() {
+        return {
+            form: {
+                email: '',
+                password: '',
+            },
+            errors: []
+        }
+    },
+    methods: {
+        async submitForm() {
+            this.errors = []
+
+            if (this.form.email === '') {
+                this.errors.push('Your e-mail is missing')
+            }
+
+            if (this.form.password === '') {
+                this.errors.push('Your password is missing')
+            }
+
+            if (this.errors.length === 0) {
+                await axios
+                    .post('/api/login/', this.form)
+                    .then(response => {
+                        this.userStore.setToken(response.data)
+
+                        axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.access;
+                    })
+                    .catch(error => {
+                        console.log('error', error)
+
+                        this.errors.push('The email or password is incorrect! Or the user is not activated!')
+                    })
+            }
+            
+            if (this.errors.length === 0) {
+                await axios
+                    .get('/api/me/')
+                    .then(response => {
+                        this.userStore.setUserInfo(response.data)
+
+                        this.$router.push('/feed')
+                    })
+                    .catch(error => {
+                        console.log('error', error)
+                    })
+            }
+        }
+    }
+}
+</script>
