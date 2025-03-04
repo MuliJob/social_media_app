@@ -1,5 +1,5 @@
 <template>
-      <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
+    <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
         <div class="main-left col-span-1">
             <div class="p-4 bg-white border border-gray-200 rounded-lg">
                 <div class="space-y-4">
@@ -76,10 +76,100 @@
                     </div>
 
                     <div class="p-4 border-t border-gray-100 flex justify-between">
-                        <button class="inline-block py-4 px-6 bg-emerald-600 text-white rounded-lg">Send</button>
+                        <button class="inline-block py-4 px-6 bg-purple-600 text-white rounded-lg">Send</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </template>
+
+<script>
+import axios from 'axios'
+import { useUserStore } from '@/stores/user'
+
+export default {
+    name: 'chat',
+
+    setup() {
+        const userStore = useUserStore()
+
+        return {
+            userStore
+        }
+    },
+
+    data() {
+        return {
+            conversations: [],
+            activeConversation: {},
+            body: ''
+        }
+    },
+
+    mounted() {
+        this.getConversations()
+    },
+    
+    methods: {
+        setActiveConversation(id) {
+            console.log('setActiveConversation', id)
+
+            this.activeConversation = id
+            this.getMessages()
+        },
+        getConversations() {
+            console.log('getConversations')
+
+            axios
+                .get('/api/chat/')
+                .then(response => {
+                    console.log(response.data)
+
+                    this.conversations = response.data
+
+                    if (this.conversations.length) {
+                        this.activeConversation = this.conversations[0].id
+                    }
+
+                    this.getMessages()
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+
+        getMessages() {
+            console.log('getMessages')
+
+            axios
+                .get(`/api/chat/${this.activeConversation}/`)
+                .then(response => {
+                    console.log(response.data)
+
+                    this.activeConversation = response.data
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+
+        submitForm() {
+            console.log('submitForm', this.body)
+
+            axios
+                .post(`/api/chat/${this.activeConversation.id}/send/`, {
+                    body: this.body
+                })
+                .then(response => {
+                    console.log(response.data)
+
+                    this.activeConversation.messages.push(response.data)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        }
+    }
+}
+</script>
