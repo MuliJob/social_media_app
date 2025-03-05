@@ -5,6 +5,9 @@ from .forms import PostForm
 from .models import Post
 from .serializers import PostSerializer
 
+from account.models import User
+from account.serializers import UserSerializer
+
 @api_view(['GET'])
 def post_list(request):
     """Posting a post"""
@@ -13,6 +16,35 @@ def post_list(request):
     serializer = PostSerializer(posts, many=True)
 
     return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def post_list_profile(request, id):
+    """Profile list"""
+    user = User.objects.get(pk=id)
+    posts = Post.objects.filter(created_by_id=id)
+
+    # if not request.user in user.friends.all():
+    #     posts = posts.filter(is_private=False)
+
+    posts_serializer = PostSerializer(posts, many=True)
+    user_serializer = UserSerializer(user)
+
+    # can_send_friendship_request = True
+
+    # if request.user in user.friends.all():
+    #     can_send_friendship_request = False
+
+    # check1 = FriendshipRequest.objects.filter(created_for=request.user).filter(created_by=user)
+    # check2 = FriendshipRequest.objects.filter(created_for=user).filter(created_by=request.user)
+
+    # if check1 or check2:
+    #     can_send_friendship_request = False
+
+    return JsonResponse({
+        'posts': posts_serializer.data,
+        'user': user_serializer.data,
+        # 'can_send_friendship_request': can_send_friendship_request
+    }, safe=False)
 
 @api_view(['POST'])
 def post_create(request):
