@@ -2,8 +2,11 @@ from django.http import JsonResponse
 
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
+# from notification.utils import create_notification
+
 from .forms import SignupForm
 from .models import FriendshipRequest, User
+from .serializers import FriendshipRequestSerializer, UserSerializer
 
 @api_view(['GET'])
 def me(request):
@@ -40,6 +43,26 @@ def signup(request):
 
     return JsonResponse({'message': message})
 
+@api_view(['GET'])
+def friends(request, pk):
+    """Friends api view"""
+    user = User.objects.get(pk=pk)
+    requests = []
+
+    if user == request.user:
+        requests = FriendshipRequest.objects.filter(created_for=request.user,
+                                                    status=FriendshipRequest.SENT)
+        requests = FriendshipRequestSerializer(requests, many=True)
+        requests = requests.data
+
+    friends = user.friends.all()
+
+    return JsonResponse({
+        'user': UserSerializer(user).data,
+        'friends': UserSerializer(friends, many=True).data,
+        'requests': requests
+    }, safe=False)
+
 @api_view(['POST'])
 def send_friendship_request(request, pk):
     """Sending friendship request"""
@@ -49,10 +72,34 @@ def send_friendship_request(request, pk):
     check2 = FriendshipRequest.objects.filter(created_for=user).filter(created_by=request.user)
 
     if not check1 or not check2:
-        friendrequest = FriendshipRequest.objects.create(created_for=user, created_by=request.user)
+        FriendshipRequest.objects.create(created_for=user, created_by=request.user)
 
-        notification = create_notification(request, 'new_friendrequest', friendrequest_id=friendrequest.id)
+        # notification = create_notification(request,
+        #                                    'new_friendrequest', friendrequest_id=friendrequest.id)
 
         return JsonResponse({'message': 'friendship request created'})
     else:
         return JsonResponse({'message': 'request already sent'})
+
+@api_view(['POST'])
+def handle_request(request, pk, status):
+    """Accepting and Rejecting friendship requests"""
+    user = User.objects.get(pk=pk)
+    friendship_request = FriendshipRequest.objects.filter(
+        created_for=request.user).get(created_by=user)
+    friendship_request.status = status
+    friendship_request.save()
+
+    user.friends.add(request.user)
+    user.friends_count = user.friends_count + 1
+    user.save()
+
+    request_user = request.user
+    request_user.friends_count = request_user.friends_count + 1
+    request_user.save()
+
+    # notification = create_notification(request,
+    #                                     'accepted_friendrequest',
+    #                                     friendrequest_id=friendship_request.id)
+
+    return JsonResponse({'message': 'friendship request updated'})

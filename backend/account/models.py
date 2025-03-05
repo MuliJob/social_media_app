@@ -1,5 +1,6 @@
 import uuid
 
+from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.db import models
 from django.utils import timezone
@@ -36,11 +37,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255, blank=True, default='')
     avatar = models.ImageField(upload_to='avatars', blank=True, null=True)
     friends = models.ManyToManyField('self')
-    # friends_count = models.IntegerField(default=0)
+    friends_count = models.IntegerField(default=0)
 
-    # people_you_may_know = models.ManyToManyField('self')
+    people_you_may_know = models.ManyToManyField('self')
 
-    # posts_count = models.IntegerField(default=0)
+    posts_count = models.IntegerField(default=0)
 
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
@@ -55,16 +56,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-    # def get_avatar(self):
-    #     """getting user avatar"""
-    #     if self.avatar:
-    #         return settings.WEBSITE_URL + self.avatar.url
-    #     else:
-    #         return 'https://picsum.photos/200/200'
+    def get_avatar(self):
+        """getting user avatar"""
+        if self.avatar:
+            return settings.WEBSITE_URL + self.avatar.url
+        else:
+            return f'https://robohash.org/{self.name}.png?size=200x200'
 
 
 class FriendshipRequest(models.Model):
-    """Frendship model"""
+    """Friendship model"""
     SENT = 'sent'
     ACCEPTED = 'accepted'
     REJECTED = 'rejected'
