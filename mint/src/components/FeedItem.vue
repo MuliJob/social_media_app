@@ -1,5 +1,5 @@
 <template>
-  <!-- <div class="mb-6 flex items-center justify-between">
+  <div class="mb-6 flex items-center justify-between">
       <div class="flex items-center space-x-6">
           <img :src="post.created_by.get_avatar" class="w-[40px] rounded-full">
           
@@ -80,86 +80,86 @@
               <span class="text-orange-500 text-xs">Report post</span>
           </div>
       </div>
-  </div> -->
+  </div>
 </template>
 
 <script>
-// import axios from 'axios'
-// import { RouterLink } from 'vue-router'
-// import { useUserStore } from '@/stores/user'
-// import { useToastStore } from '@/stores/toast'
+import axios from 'axios'
+import { RouterLink } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+import { useToastStore } from '@/stores/toast'
 
-// export default {
-//   props: {
-//       post: Object
-//   },
+export default {
+  props: {
+      post: Object
+  },
 
-//   emits: ['deletePost'],
+  emits: ['deletePost'],
 
-//   setup() {
-//       const userStore = useUserStore()
-//       const toastStore = useToastStore()
+  setup() {
+      const userStore = useUserStore()
+      const toastStore = useToastStore()
 
-//       return {
-//           userStore,
-//           toastStore
-//       }
-//   },
+      return {
+          userStore,
+          toastStore
+      }
+  },
 
-//   data() {
-//       return {
-//           showExtraModal: false
-//       }
-//   },
+  data() {
+      return {
+          showExtraModal: false
+      }
+  },
 
-//   methods: {
-//       likePost(id) {
-//           axios
-//               .post(`/api/posts/${id}/like/`)
-//               .then(response => {
-//                   if (response.data.message == "like created") {
-//                       this.post.likes_count += 1;
-//                   }
-//               })
-//               .catch(error => {
-//                   console.log("error", error);
-//               });
-//       },
+  methods: {
+      likePost(id) {
+          axios
+              .post(`/api/posts/${id}/like/`)
+              .then(response => {
+                  if (response.data.message == "like created") {
+                      this.post.likes_count += 1;
+                  }
+              })
+              .catch(error => {
+                  console.log("error", error);
+              });
+      },
 
-//       reportPost() {
-//           axios
-//               .post(`/api/posts/${this.post.id}/report/`)
-//               .then(response => {
-//                   console.log(response.data)
+      reportPost() {
+          axios
+              .post(`/api/posts/${this.post.id}/report/`)
+              .then(response => {
+                  console.log(response.data)
 
-//                   this.toastStore.showToast(5000, 'The post was reported', 'bg-emerald-500')
-//               })
-//               .catch(error => {
-//                   console.log("error", error);
-//               })
-//       },
+                  this.toastStore.showToast(5000, 'The post was reported', 'bg-emerald-500')
+              })
+              .catch(error => {
+                  console.log("error", error);
+              })
+      },
 
-//       deletePost() {
-//           this.$emit('deletePost', this.post.id)
+      deletePost() {
+          this.$emit('deletePost', this.post.id)
 
-//           axios
-//               .delete(`/api/posts/${this.post.id}/delete/`)
-//               .then(response => {
-//                   console.log(response.data)
+          axios
+              .delete(`/api/posts/${this.post.id}/delete/`)
+              .then(response => {
+                  console.log(response.data)
 
-//                   this.toastStore.showToast(5000, 'The post was deleted', 'bg-emerald-500')
-//               })
-//               .catch(error => {
-//                   console.log("error", error);
-//               })
-//       },
+                  this.toastStore.showToast(5000, 'The post was deleted', 'bg-emerald-500')
+              })
+              .catch(error => {
+                  console.log("error", error);
+              })
+      },
 
-//       toggleExtraModal() {
-//           console.log('toggleExtraModal')
+      toggleExtraModal() {
+          console.log('toggleExtraModal')
 
-//           this.showExtraModal = !this.showExtraModal
-//       }
-//   },
-//   components: { RouterLink }
-// }
+          this.showExtraModal = !this.showExtraModal
+      }
+  },
+  components: { RouterLink }
+}
 </script>
