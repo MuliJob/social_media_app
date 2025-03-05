@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 from .forms import SignupForm
+from .models import FriendshipRequest, User
 
 @api_view(['GET'])
 def me(request):
@@ -38,3 +39,20 @@ def signup(request):
         message = 'error'
 
     return JsonResponse({'message': message})
+
+@api_view(['POST'])
+def send_friendship_request(request, pk):
+    """Sending friendship request"""
+    user = User.objects.get(pk=pk)
+
+    check1 = FriendshipRequest.objects.filter(created_for=request.user).filter(created_by=user)
+    check2 = FriendshipRequest.objects.filter(created_for=user).filter(created_by=request.user)
+
+    if not check1 or not check2:
+        friendrequest = FriendshipRequest.objects.create(created_for=user, created_by=request.user)
+
+        notification = create_notification(request, 'new_friendrequest', friendrequest_id=friendrequest.id)
+
+        return JsonResponse({'message': 'friendship request created'})
+    else:
+        return JsonResponse({'message': 'request already sent'})
