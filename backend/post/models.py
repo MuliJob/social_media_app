@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from django.utils.timesince import timesince
 
 from account.models import User
 
@@ -38,9 +39,11 @@ class Post(models.Model):
     created_by = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
 
     objects = models.Manager()
-    
-    # class Meta:
-    #     ordering = ('-created_at',)
 
-    # def created_at_formatted(self):
-    #    return timesince(self.created_at)
+    class Meta:
+        """Class meta"""
+        ordering = ('-created_at',)
+
+    def created_at_formatted(self):
+        """Humanizing date"""
+        return timesince(self.created_at)
