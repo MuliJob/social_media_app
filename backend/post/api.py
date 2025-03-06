@@ -1,12 +1,15 @@
 from rest_framework.decorators import api_view
-from django.http import JsonResponse
 
-from .forms import PostForm
-from .models import Post, Like
-from .serializers import PostSerializer
+from django.db.models import Q
+from django.http import JsonResponse
 
 from account.models import User
 from account.serializers import UserSerializer
+
+from .forms import PostForm
+from .models import Post, Like, Comment
+from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer
+
 
 @api_view(['GET'])
 def post_list(request):
@@ -26,6 +29,20 @@ def post_list(request):
     serializer = PostSerializer(posts, many=True)
 
     return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def post_detail(request, pk):
+    """Post detail function"""
+    user_ids = [request.user.id]
+
+    for user in request.user.friends.all():
+        user_ids.append(user.id)
+
+    post = Post.objects.filter(Q(created_by_id__in=list(user_ids)) | Q(is_private=False)).get(pk=pk)
+
+    return JsonResponse({
+        'post': PostDetailSerializer(post).data
+    })
 
 @api_view(['GET'])
 def post_list_profile(request, id):
@@ -105,3 +122,20 @@ def post_like(request, pk):
         return JsonResponse({'message': 'like created'})
     else:
         return JsonResponse({'message': 'post already liked'})
+
+
+@api_view(['POST'])
+def post_create_comment(request, pk):
+    """pOSTING A COMMENT"""
+    comment = Comment.objects.create(body=request.data.get('body'), created_by=request.user)
+
+    post = Post.objects.get(pk=pk)
+    post.comments.add(comment)
+    post.comments_count = post.comments_count + 1
+    post.save()
+
+    # notification = create_notification(request, 'post_comment', post_id=post.id)
+
+    serializer = CommentSerializer(comment)
+
+    return JsonResponse(serializer.data, safe=False)

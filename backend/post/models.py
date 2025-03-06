@@ -14,6 +14,23 @@ class Like(models.Model):
 
     objects = models.Manager()
 
+class Comment(models.Model):
+    """POst comments"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    body = models.TextField(blank=True, null=True)
+    created_by = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    objects = models.Manager()
+
+    class Meta:
+        """Class meta"""
+        ordering = ('created_at',)
+
+    def created_at_formatted(self):
+        """Formatted date"""
+        return timesince(self.created_at)
+
 class PostAttachment(models.Model):
     """Attaching an image to a post"""
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -39,8 +56,8 @@ class Post(models.Model):
     likes = models.ManyToManyField(Like, blank=True)
     likes_count = models.IntegerField(default=0)
 
-    # comments = models.ManyToManyField(Comment, blank=True)
-    # comments_count = models.IntegerField(default=0)
+    comments = models.ManyToManyField(Comment, blank=True)
+    comments_count = models.IntegerField(default=0)
 
     # reported_by_users = models.ManyToManyField(User, blank=True)
 
