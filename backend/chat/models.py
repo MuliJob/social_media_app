@@ -32,7 +32,7 @@ class ConversationMessage(models.Model):
     created_by = models.ForeignKey(User,
                                    related_name='sent_messages',
                                    on_delete=models.CASCADE)
-    
+
     def created_at_formatted(self):
         """Formatted date"""
         return timesince(self.created_at)
