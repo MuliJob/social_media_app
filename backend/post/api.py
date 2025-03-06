@@ -7,8 +7,8 @@ from account.models import User
 from account.serializers import UserSerializer
 
 from .forms import PostForm
-from .models import Post, Like, Comment
-from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer
+from .models import Post, Like, Comment, Trend
+from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer
 
 
 @api_view(['GET'])
@@ -137,5 +137,13 @@ def post_create_comment(request, pk):
     # notification = create_notification(request, 'post_comment', post_id=post.id)
 
     serializer = CommentSerializer(comment)
+
+    return JsonResponse(serializer.data, safe=False)
+
+
+@api_view(['GET'])
+def get_trends(request):
+    """Getting trends"""
+    serializer = TrendSerializer(Trend.objects.all(), many=True)
 
     return JsonResponse(serializer.data, safe=False)

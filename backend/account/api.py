@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 
 # from notification.utils import create_notification
 
-from .forms import SignupForm
+from .forms import SignupForm, ProfileForm
 from .models import FriendshipRequest, User
 from .serializers import FriendshipRequestSerializer, UserSerializer
 
@@ -15,7 +15,7 @@ def me(request):
         'id': request.user.id,
         'name': request.user.name,
         'email': request.user.email,
-        # 'avatar': request.user.get_avatar()
+        'avatar': request.user.get_avatar()
     })
 
 
@@ -23,25 +23,37 @@ def me(request):
 @authentication_classes([])
 @permission_classes([])
 def signup(request):
-    """Signup API View"""
+    """Signup function"""
     data = request.data
     message = 'success'
 
     form = SignupForm({
-        'name': data.get('name'),
         'email': data.get('email'),
+        'name': data.get('name'),
         'password1': data.get('password1'),
         'password2': data.get('password2'),
     })
 
     if form.is_valid():
-        form.save()
+        user = form.save()
+        user.is_active = False
+        user.save()
 
-        #send verification email later!
+        # url = f'{settings.WEBSITE_URL}/activateemail/?email={user.email}&id={user.id}'
+
+        # send_mail(
+        #     "Please verify your email",
+        #     f"The url for activating your account is: {url}",
+        #     "noreply@wey.com",
+        #     [user.email],
+        #     fail_silently=False,
+        # )
     else:
-        message = 'error'
+        message = form.errors.as_json()
 
-    return JsonResponse({'message': message})
+    print(message)
+
+    return JsonResponse({'message': message}, safe=False)
 
 @api_view(['GET'])
 def friends(request, pk):
@@ -62,6 +74,25 @@ def friends(request, pk):
         'friends': UserSerializer(friendship, many=True).data,
         'requests': requests
     }, safe=False)
+
+
+@api_view(['POST'])
+def edit_profile(request):
+    """Editing user profile"""
+    user = request.user
+    email = request.data.get('email')
+
+    if User.objects.exclude(id=user.id).filter(email=email).exists():
+        return JsonResponse({'message': 'email already exists'})
+    else:
+        form = ProfileForm(request.POST, request.FILES, instance=user)
+
+        if form.is_valid():
+            form.save()
+
+        serializer = UserSerializer(user)
+
+        return JsonResponse({'message': 'information updated', 'user': serializer.data})
 
 @api_view(['POST'])
 def send_friendship_request(request, pk):

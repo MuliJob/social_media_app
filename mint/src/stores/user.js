@@ -10,7 +10,7 @@ export const useUserStore = defineStore('user', {
             email: null,
             access: null,
             refresh: null,
-            // avatar: null
+            avatar: null
         }
     }),
 
@@ -26,7 +26,7 @@ export const useUserStore = defineStore('user', {
                 this.user.id = localStorage.getItem('user.id')
                 this.user.name = localStorage.getItem('user.name')
                 this.user.email = localStorage.getItem('user.email')
-                // this.user.avatar = localStorage.getItem('user.avatar')
+                this.user.avatar = localStorage.getItem('user.avatar')
                 this.user.isAuthenticated = true
 
                 this.refreshToken()
@@ -57,14 +57,14 @@ export const useUserStore = defineStore('user', {
             this.user.id = null
             this.user.name = null
             this.user.email = null
-            // this.user.avatar = null
+            this.user.avatar = null
 
             localStorage.setItem('user.access', '')
             localStorage.setItem('user.refresh', '')
             localStorage.setItem('user.id', '')
             localStorage.setItem('user.name', '')
             localStorage.setItem('user.email', '')
-            // localStorage.setItem('user.avatar', '')
+            localStorage.setItem('user.avatar', '')
         },
 
         setUserInfo(user) {
@@ -73,12 +73,12 @@ export const useUserStore = defineStore('user', {
             this.user.id = user.id
             this.user.name = user.name
             this.user.email = user.email
-            // this.user.avatar = user.avatar
+            this.user.avatar = user.avatar
 
             localStorage.setItem('user.id', this.user.id)
             localStorage.setItem('user.name', this.user.name)
             localStorage.setItem('user.email', this.user.email)
-            // localStorage.setItem('user.avatar', this.user.avatar)
+            localStorage.setItem('user.avatar', this.user.avatar)
 
             console.log('User', this.user)
         },
