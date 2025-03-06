@@ -58,6 +58,11 @@ const router = createRouter({
       component: PostView
     },
     {
+      path: '/chat',
+      name: 'chat',
+      component: ChatView
+    },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting

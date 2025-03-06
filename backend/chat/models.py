@@ -13,6 +13,8 @@ class Conversation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
+    objects = models.Manager()
+
     def modified_at_formatted(self):
         """Modified date"""
         return timesince(self.created_at)
@@ -32,6 +34,8 @@ class ConversationMessage(models.Model):
     created_by = models.ForeignKey(User,
                                    related_name='sent_messages',
                                    on_delete=models.CASCADE)
+
+    objects = models.Manager()
 
     def created_at_formatted(self):
         """Formatted date"""
