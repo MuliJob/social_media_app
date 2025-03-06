@@ -15,3 +15,12 @@ def conversation_list(request):
     serializer = ConversationSerializer(conversations, many=True)
 
     return JsonResponse(serializer.data, safe=False)
+
+
+@api_view(['GET'])
+def conversation_detail(request, pk):
+    """Getting conversation detail"""
+    conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+    serializer = ConversationDetailSerializer(conversation)
+
+    return JsonResponse(serializer.data, safe=False)
