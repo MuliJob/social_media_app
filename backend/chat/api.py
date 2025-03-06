@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import api_view
 
 from account.models import User
 
@@ -26,22 +26,24 @@ def conversation_detail(request, pk):
     return JsonResponse(serializer.data, safe=False)
 
 
-# @api_view(['GET'])
-# def conversation_get_or_create(request, user_pk):
-#     user = User.objects.get(pk=user_pk)
+@api_view(['GET'])
+def conversation_get_or_create(request, user_pk):
+    """Create a new message"""
+    user = User.objects.get(pk=user_pk)
 
-#     conversations = Conversation.objects.filter(users__in=list([request.user])).filter(users__in=list([user]))
+    conversations = Conversation.objects.filter(
+        users__in=list([request.user])).filter(users__in=list([user]))
 
-#     if conversations.exists():
-#         conversation = conversations.first()
-#     else:
-#         conversation = Conversation.objects.create()
-#         conversation.users.add(user, request.user)
-#         conversation.save()
+    if conversations.exists():
+        conversation = conversations.first()
+    else:
+        conversation = Conversation.objects.create()
+        conversation.users.add(user, request.user)
+        conversation.save()
 
-#     serializer = ConversationDetailSerializer(conversation)
-    
-#     return JsonResponse(serializer.data, safe=False)
+    serializer = ConversationDetailSerializer(conversation)
+
+    return JsonResponse(serializer.data, safe=False)
 
 
 @api_view(['POST'])
