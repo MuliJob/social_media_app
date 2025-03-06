@@ -12,6 +12,7 @@ class PostSerializer(serializers.ModelSerializer):
             'id',
             'body',
             'likes_count',
+            'comments_count',
             'created_by',
             'created_at_formatted'
         )
