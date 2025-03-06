@@ -10,10 +10,10 @@
           >
               <p class="text-xs">
                   <strong>#{{ trend.hashtag }}</strong><br>
-                  <span class="text-gray-500">{{ trend.occurences }} posts</span>
+                  <span class="text-gray-500">{{ trend.occurrences }} posts</span>
               </p>
 
-              <RouterLink :to="{name: 'trendview', params: {id: trend.hashtag}}" class="py-2 px-3 bg-purple-600 text-white text-xs rounded-lg">Explore</RouterLink>
+              <RouterLink :to="{name: 'trendview', params: {id: trend.hashtag}}" class="py-2 px-3 bg-emerald-600 text-white text-xs rounded-lg">Explore</RouterLink>
           </div>
       </div>
   </div>

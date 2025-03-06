@@ -73,3 +73,11 @@ class Post(models.Model):
     def created_at_formatted(self):
         """Humanizing date"""
         return timesince(self.created_at)
+
+
+class Trend(models.Model):
+    """Trend models"""
+    hashtag = models.CharField(max_length=255)
+    occurrences = models.IntegerField()
+
+    objects = models.Manager()
