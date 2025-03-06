@@ -55,11 +55,11 @@ def friends(request, pk):
         requests = FriendshipRequestSerializer(requests, many=True)
         requests = requests.data
 
-    friends = user.friends.all()
+    friendship = user.friends.all()
 
     return JsonResponse({
         'user': UserSerializer(user).data,
-        'friends': UserSerializer(friends, many=True).data,
+        'friends': UserSerializer(friendship, many=True).data,
         'requests': requests
     }, safe=False)
 

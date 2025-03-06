@@ -5,6 +5,15 @@ from django.utils.timesince import timesince
 
 from account.models import User
 
+
+class Like(models.Model):
+    """Likes model"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_by = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    objects = models.Manager()
+
 class PostAttachment(models.Model):
     """Attaching an image to a post"""
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -27,8 +36,8 @@ class Post(models.Model):
 
     # is_private = models.BooleanField(default=False)
 
-    # likes = models.ManyToManyField(Like, blank=True)
-    # likes_count = models.IntegerField(default=0)
+    likes = models.ManyToManyField(Like, blank=True)
+    likes_count = models.IntegerField(default=0)
 
     # comments = models.ManyToManyField(Comment, blank=True)
     # comments_count = models.IntegerField(default=0)

@@ -11,6 +11,7 @@ class PostSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'body',
+            'likes_count',
             'created_by',
             'created_at_formatted'
         )
