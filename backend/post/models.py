@@ -1,5 +1,6 @@
 import uuid
 
+from django.conf import settings
 from django.db import models
 from django.utils.timesince import timesince
 
@@ -37,12 +38,12 @@ class PostAttachment(models.Model):
     image = models.ImageField(upload_to='post_attachments')
     created_by = models.ForeignKey(User, related_name='post_attachments', on_delete=models.CASCADE)
 
-    # def get_image(self):
-    #     """GETTING THE IMAGE FUNCTION"""
-    #     if self.image:
-    #         return settings.WEBSITE_URL + self.image.url
-    #     else:
-    #         return ''
+    def get_image(self):
+        """GETTING THE IMAGE FUNCTION"""
+        if self.image:
+            return settings.WEBSITE_URL + self.image.url
+        else:
+            return ''
 
 class Post(models.Model):
     """POst model"""
@@ -51,7 +52,7 @@ class Post(models.Model):
 
     attachments = models.ManyToManyField(PostAttachment, blank=True)
 
-    # is_private = models.BooleanField(default=False)
+    is_private = models.BooleanField(default=False)
 
     likes = models.ManyToManyField(Like, blank=True)
     likes_count = models.IntegerField(default=0)
@@ -59,7 +60,7 @@ class Post(models.Model):
     comments = models.ManyToManyField(Comment, blank=True)
     comments_count = models.IntegerField(default=0)
 
-    # reported_by_users = models.ManyToManyField(User, blank=True)
+    reported_by_users = models.ManyToManyField(User, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)

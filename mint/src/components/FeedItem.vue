@@ -13,11 +13,11 @@
       <p class="text-gray-600">{{ post.created_at_formatted }} ago</p>
   </div>
 
-  <template v-if="post.attachments.length">
-      <img v-for="image in post.attachments" v-bind:key="image.id" :src="image.get_image" class="w-full mb-4 rounded-xl">
-  </template>
-
   <p>{{ post.body }}</p>
+
+  <template v-if="post.attachments.length">
+      <img v-for="image in post.attachments" v-bind:key="image.id" :src="image.get_image" class="w-full mt-3 rounded-xl">
+  </template>
 
   <div class="my-6 flex justify-between">
       <div class="flex space-x-6 items-center">

@@ -61,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.avatar:
             return settings.WEBSITE_URL + self.avatar.url
         else:
-            return f'https://robohash.org/{self.name}.png?size=200x200'
+            return 'https://picsum.photos/200/200'
 
 
 class FriendshipRequest(models.Model):

@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from .models import Post
+from .models import Post, PostAttachment
 
 
 class PostForm(ModelForm):
@@ -11,9 +11,9 @@ class PostForm(ModelForm):
         fields = ('body',)
 
 
-# class AttachmentForm(ModelForm):
-#     """Attaching file form"""
-#     class Meta:
-#         """Class meta"""
-#         model = PostAttachment
-#         fields = ('image',)
+class AttachmentForm(ModelForm):
+    """Attaching file form"""
+    class Meta:
+        """Class meta"""
+        model = PostAttachment
+        fields = ('image',)
