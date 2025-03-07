@@ -165,6 +165,7 @@ export default {
                     console.log(response.data)
 
                     this.activeConversation.messages.push(response.data)
+                    this.body = ''
                 })
                 .catch(error => {
                     console.log(error)
