@@ -141,6 +141,24 @@ def post_create_comment(request, pk):
 
     return JsonResponse(serializer.data, safe=False)
 
+@api_view(['DELETE'])
+def post_delete(request, pk):
+    """Deleting a post"""
+    post = Post.objects.filter(created_by=request.user).get(pk=pk)
+    post.delete()
+
+    return JsonResponse({'message': 'post deleted'})
+
+
+# @api_view(['POST'])
+# def post_report(request, pk):
+#     """Reporting a post"""
+#     post = Post.objects.get(pk=pk)
+#     post.reported_by_users.add(request.user)
+#     post.save()
+
+#     return JsonResponse({'message': 'post reported'})
+
 
 @api_view(['GET'])
 def get_trends(request):
