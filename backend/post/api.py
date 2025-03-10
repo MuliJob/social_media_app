@@ -150,14 +150,14 @@ def post_delete(request, pk):
     return JsonResponse({'message': 'post deleted'})
 
 
-# @api_view(['POST'])
-# def post_report(request, pk):
-#     """Reporting a post"""
-#     post = Post.objects.get(pk=pk)
-#     post.reported_by_users.add(request.user)
-#     post.save()
+@api_view(['POST'])
+def post_report(request, pk):
+    """Reporting a post"""
+    post = Post.objects.get(pk=pk)
+    post.reported_by_users.add(request.user)
+    post.save()
 
-#     return JsonResponse({'message': 'post reported'})
+    return JsonResponse({'message': 'post reported'})
 
 
 @api_view(['GET'])
