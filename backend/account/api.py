@@ -81,6 +81,7 @@ def friends(request, pk):
 
 @api_view(['GET'])
 def my_friendship_suggestions(request):
+    """Friend request suggested"""
     serializer = UserSerializer(request.user.people_you_may_know.all(), many=True)
 
     return JsonResponse(serializer.data, safe=False)
