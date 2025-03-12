@@ -79,7 +79,7 @@ const router = createRouter({
     },
     {
       path: '/trends/:id',
-      name: 'trenview',
+      name: 'trendview',
       component: TrendView
     },
     {
