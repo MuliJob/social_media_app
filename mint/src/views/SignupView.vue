@@ -19,22 +19,22 @@
                 <form class="space-y-6" v-on:submit.prevent="submitForm">
                     <div>
                         <label>Name</label><br>
-                        <input type="text" v-model="form.name" placeholder="Your full name" class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg">
+                        <input type="text" v-model="form.name" placeholder="Your full name" class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg">
                     </div>
 
                     <div>
                         <label>E-mail</label><br>
-                        <input type="email" v-model="form.email" placeholder="Your e-mail address" class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg">
+                        <input type="email" v-model="form.email" placeholder="Your e-mail address" class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg">
                     </div>
 
                     <div>
                         <label>Password</label><br>
-                        <input type="password" v-model="form.password1" placeholder="Your password" class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg">
+                        <input type="password" v-model="form.password1" placeholder="Your password" class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg">
                     </div>
 
                     <div>
                         <label>Repeat password</label><br>
-                        <input type="password" v-model="form.password2" placeholder="Repeat your password" class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg">
+                        <input type="password" v-model="form.password2" placeholder="Repeat your password" class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg">
                     </div>
 
                     <template v-if="errors.length > 0">
@@ -44,7 +44,7 @@
                     </template>
 
                     <div>
-                        <button class="py-4 px-6 bg-emerald-600 text-white rounded-lg w-full">Sign up</button>
+                        <button class="py-2 px-6 bg-emerald-600 text-white rounded-lg w-full">Sign up</button>
                     </div>
                 </form>
             </div>

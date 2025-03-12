@@ -19,12 +19,12 @@
                 <form class="space-y-6" v-on:submit.prevent="submitForm">
                     <div>
                         <label>E-mail</label><br>
-                        <input type="email" v-model="form.email" placeholder="Your e-mail address" class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg">
+                        <input type="email" v-model="form.email" placeholder="Your e-mail address" class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg">
                     </div>
 
                     <div>
                         <label>Password</label><br>
-                        <input type="password" v-model="form.password" placeholder="Your password" class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg">
+                        <input type="password" v-model="form.password" placeholder="Your password" class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg">
                     </div>
 
                     <template v-if="errors.length > 0">
@@ -34,7 +34,7 @@
                     </template>
 
                     <div>
-                        <button class="py-4 px-6 bg-emerald-600 text-white rounded-lg w-full">Log in</button>
+                        <button class="py-2 px-6 bg-emerald-600 text-white rounded-lg w-full">Log in</button>
                     </div>
                 </form>
             </div>
