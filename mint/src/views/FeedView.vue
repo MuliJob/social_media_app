@@ -1,6 +1,6 @@
 <template>
-    <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
-        <div class="main-center col-span-3 space-y-4">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row gap-4">
+        <div class="main-center w-full col-span-3 space-y-4">
             <div class="bg-white border border-gray-200 rounded-lg">
                 <FeedForm 
                     v-bind:user="null" 
@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <div class="main-right col-span-1 space-y-4">
+        <div class="main-right col-span-1 space-y-4 space-x-7 sm:flex-row gap-4">
             <PeopleYouMayKnow />
 
             <Trends />
